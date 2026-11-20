@@ -52,16 +52,29 @@ export function migrate(db: Db): number[] {
   return nowApplied;
 }
 
-/** Run `fn` inside an immediate transaction; rolls back on throw. */
+const txDepth = new WeakMap<Db, number>();
+
+/** Run `fn` inside a transaction; nested calls become savepoints. */
 export function tx<T>(db: Db, fn: () => T): T {
-  db.exec('BEGIN IMMEDIATE');
+  const depth = txDepth.get(db) ?? 0;
+  if (depth === 0) db.exec('BEGIN IMMEDIATE');
+  else db.exec(`SAVEPOINT ped_sp_${depth}`);
+  txDepth.set(db, depth + 1);
   try {
     const out = fn();
-    db.exec('COMMIT');
+    if (depth === 0) db.exec('COMMIT');
+    else db.exec(`RELEASE ped_sp_${depth}`);
     return out;
   } catch (err) {
-    db.exec('ROLLBACK');
+    if (depth === 0) {
+      db.exec('ROLLBACK');
+    } else {
+      db.exec(`ROLLBACK TO ped_sp_${depth}`);
+      db.exec(`RELEASE ped_sp_${depth}`);
+    }
     throw err;
+  } finally {
+    txDepth.set(db, depth);
   }
 }
 

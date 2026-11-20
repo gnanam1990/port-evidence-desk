@@ -1,7 +1,7 @@
 {
   "project": "Port Evidence Desk",
   "packVersion": "1.0",
-  "testedSha": "PENDING",
+  "testedSha": "cc77d4830890d5d57711a2335581a986dae6eab7",
   "targetBranch": "devin/port-evidence-desk",
   "modules": [
     {

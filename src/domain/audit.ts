@@ -80,11 +80,31 @@ export function runIdempotent<T extends object>(
         (err as { code?: string }).code = 'idempotency_conflict';
         throw err;
       }
-      return {
-        operation: existing,
-        result: existing.result_ref ? (JSON.parse(existing.result_ref) as T) : ({ operation_id: existing.id } as T),
-        deduplicated: true,
-      };
+      if (existing.status === 'done') {
+        return {
+          operation: existing,
+          result: existing.result_ref ? (JSON.parse(existing.result_ref) as T) : ({ operation_id: existing.id } as T),
+          deduplicated: true,
+        };
+      }
+      if (existing.status === 'running') {
+        const err = new Error('operation already in flight');
+        (err as { code?: string }).code = 'operation_in_flight';
+        throw err;
+      }
+      // Failed attempts are safe to retry: denials and faults leave no result.
+      db.prepare("UPDATE operations SET status = 'running', error = NULL, completed_at = NULL WHERE id = ?")
+        .run(existing.id);
+      try {
+        const result = fn();
+        db.prepare("UPDATE operations SET status = 'done', result_ref = ?, completed_at = ? WHERE id = ?")
+          .run(JSON.stringify(result), isoNow(), existing.id);
+        return { operation: existing, result, deduplicated: true };
+      } catch (err) {
+        db.prepare("UPDATE operations SET status = 'failed', error = ?, completed_at = ? WHERE id = ?")
+          .run(String((err as Error).message ?? err), isoNow(), existing.id);
+        throw err;
+      }
     }
   }
   const opId = newId('op');
