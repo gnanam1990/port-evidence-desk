@@ -60,7 +60,7 @@ h3 { font-size: 1rem; margin: 0.9rem 0 0.4rem; }
 table { border-collapse: collapse; width: 100%; min-width: 460px; font-size: 0.9rem; margin: 0.4rem 0; }
 caption { text-align: left; font-weight: 600; padding: 4px 0; }
 th, td { border: 1px solid var(--line); padding: 0.4rem 0.55rem; text-align: left; vertical-align: top; font-variant-numeric: tabular-nums; }
-th { background: #F4ECDC; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-soft); }
+th { background: #F4ECDC; font-size: 0.78rem; letter-spacing: 0.02em; color: var(--ink-soft); }
 table button { margin: 0.15rem 0.15rem 0.15rem 0; padding: 0.3rem 0.6rem; font-size: 0.85rem; }
 
 .chip {
@@ -131,12 +131,12 @@ button:disabled { opacity: 0.55; cursor: not-allowed; }
 
 .kv { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 4px 16px; }
 .kv div { padding: 2px 0; }
-.kv dt { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-soft); }
+.kv dt { font-size: 0.78rem; letter-spacing: 0.02em; color: var(--ink-soft); }
 .kv dd { margin: 0; font-weight: 600; }
 
 .totals { display: flex; gap: 1.75rem; flex-wrap: wrap; font-size: 1rem; }
 .totals > div { border-left: 3px solid var(--line); padding-left: 0.75rem; }
-.totals b { display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-soft); font-weight: 600; }
+.totals b { display: block; font-size: 0.78rem; letter-spacing: 0.02em; color: var(--ink-soft); font-weight: 600; }
 .totals div:first-child { border-left-color: var(--warn); }
 .totals div:last-child { border-left-color: var(--ok); }
 
