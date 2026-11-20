@@ -261,7 +261,7 @@ if (BROWSER === 'none') {
     ops.includes('Provider capability ledger') && ops.includes('kite'));
 
   check('pages declare a responsive viewport and narrow-width rules',
-    page.text.includes('width=device-width') && /@media \(max-width:480px\)/.test(css));
+    page.text.includes('width=device-width') && /@media \(max-width:\s*480px\)/.test(css));
   skip('casebook fits 320 CSS px without horizontal overflow', 'requires a real layout engine (CDP run)');
   skip('keyboard traversal still works at 320px', 'requires a real layout engine (CDP run)');
 

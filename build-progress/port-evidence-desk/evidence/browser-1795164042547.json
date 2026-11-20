@@ -1,0 +1,162 @@
+{
+  "when": "2026-11-20T08:40:42.964Z",
+  "browser": "none",
+  "app": "node src/server.ts (ephemeral port)",
+  "checks": [
+    {
+      "name": "setup: seeded case reaches delivered evidence + exported claim + credit",
+      "pass": true,
+      "detail": "state=partially_credited recovered=70000"
+    },
+    {
+      "name": "unauthenticated visit redirects to /login",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "sign-in page has labelled controls",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "keyboard reaches PIN field",
+      "pass": null,
+      "skipped": true,
+      "detail": "requires a real layout engine (CDP run)"
+    },
+    {
+      "name": "sign-in through the real form path → case queue",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "case queue lists the seeded container invoice",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "casebook is linked from the queue",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "Tab order reaches the case link",
+      "pass": null,
+      "skipped": true,
+      "detail": "requires a real layout engine (CDP run)"
+    },
+    {
+      "name": "stylesheet defines a visible focus indicator",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "stylesheet includes a skip link that appears on focus",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "Enter opens the casebook",
+      "pass": true,
+      "detail": "direct GET verified; Enter activation needs CDP run"
+    },
+    {
+      "name": "casebook shows gate-out evidence (May 4, proven)",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "day ledger shows free days and INR 1,000 charge days",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "expected charge 2,000.00 INR vs billed 3,000.00 INR shown",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "disputed vs confirmed recovery are separate figures",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "status chips carry text, not colour-only meaning",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "every form control on the casebook is labelled",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "reload preserves the session and case data",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "session cookie survives reload (still signed in)",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "portfolio separates Disputed / Submitted / Credited in INR",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "manager-only action as analyst redirects to an error state",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "denied action renders a visible error notice",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "missing case shows a clear not-found state",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "operations page exposes provider capability honestly",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "pages declare a responsive viewport and narrow-width rules",
+      "pass": false,
+      "detail": ""
+    },
+    {
+      "name": "casebook fits 320 CSS px without horizontal overflow",
+      "pass": null,
+      "skipped": true,
+      "detail": "requires a real layout engine (CDP run)"
+    },
+    {
+      "name": "keyboard traversal still works at 320px",
+      "pass": null,
+      "skipped": true,
+      "detail": "requires a real layout engine (CDP run)"
+    },
+    {
+      "name": "sign out destroys the session",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "Tab reaches the Sign out control",
+      "pass": null,
+      "skipped": true,
+      "detail": "requires a real layout engine (CDP run)"
+    }
+  ],
+  "summary": {
+    "total": 29,
+    "failed": 1,
+    "skipped": 5
+  }
+}
