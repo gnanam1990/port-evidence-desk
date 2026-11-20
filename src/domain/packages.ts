@@ -113,6 +113,9 @@ export function exportPackage(
       db, 'SELECT * FROM cases WHERE id = ?', p.case_id,
     );
     if (!cs || cs.tenant_id !== actor.tenantId) throw notFound('package_not_found', 'package not found');
+    if (p.status === 'stale') {
+      throw conflict('stale_inputs', 'case inputs changed since the package was drafted; re-draft and re-approve');
+    }
     if (p.status !== 'approved') {
       throw conflict('package_not_approved', `package is ${p.status}; manager approval is required before export`);
     }

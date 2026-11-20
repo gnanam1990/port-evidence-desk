@@ -7,7 +7,6 @@ import { badRequest, notFound } from '../domain/errors.ts';
 import { type Actor } from '../domain/audit.ts';
 import { ingestEvent, resolveEventConflict, invalidateApprovals } from '../domain/events.ts';
 import { recomputeCase } from '../domain/calc.ts';
-import { caseDetail } from '../http/app.ts';
 
 type Api = (method: string, path: string, fn: (ctx: import('../http/router.ts').RequestCtx, actor: Actor | null) => unknown, roles?: Actor['role'][]) => void;
 
@@ -106,9 +105,4 @@ export function registerEventApi(api: Api, db: Db, _cfg: AppConfig): void {
       db, 'SELECT * FROM calculations WHERE case_id = ? AND revision = ?', p.params.id, r.revision,
     );
   }, ['analyst']);
-
-  api('GET', '/cases/:id', (ctx, actor) => {
-    const p = ctx as unknown as { params: Record<string, string> };
-    return caseDetail(db, p.params.id, actor!);
-  });
 }

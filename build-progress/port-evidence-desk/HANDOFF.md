@@ -1,15 +1,25 @@
 # Port Evidence Desk · Session handoff
 
-- Target repository / branch / tested SHA: port-evidence-desk / devin/port-evidence-desk / pending (update after commit)
-- Current module and owner: M03, devin
-- Completed behavior and redacted evidence path: M01 intake + M02 tariff/day-ledger; tests `test/m01-intake.test.ts`, `test/m02-tariff.test.ts` (8 tests total, all pass)
+- Target repository / branch / tested SHA: port-evidence-desk / devin/port-evidence-desk / (set after M06–M08 commit)
+- Current module and owner: all modules M01–M08 implemented and test-green; owner devin
+- Completed behavior and redacted evidence path:
+  - M01 intake (JSON+CSV, provenance, dedup, conflict revisions) — `test/m01-intake.test.ts`
+  - M02 tariff/day ledger (versioned pin, per-day kinds, unpriced-not-zero) — `test/m02-tariff.test.ts`
+  - M03 evidence/uncertainty (quarantine, bounded gaps, dispute≠credit) — `test/m03-evidence.test.ts`
+  - M04 quotes/authorization (budget ceiling, conversion pinning, rights, idempotent order) — `test/m04-quotes.test.ts`
+  - M05 partner reconciliation (HMAC callbacks, dedup, conflicts, parked unknown, supersede) — `test/m05-reconcile.test.ts`
+  - M06 export (manifest+ledger+claim, approval pinning, stale invalidation) — `test/m06-export.test.ts`
+  - M07 credits/portfolio (carrier-ref dedup, currency/tenant gates, per-currency rollup) — `test/m07-credits.test.ts`
+  - M08 e2e (restart recovery via savepoints+stuck-row reset, blocked kite rail, labeled pilot fixture) — `test/m08-e2e.test.ts`
 - Working tree or branch requiring transfer: none beyond HEAD
 - Commands, exit codes and tested environment:
-  - `node --test 'test/*.test.ts'` → exit 0, 8 tests pass, Node v22.23.1, macOS arm64
-  - `./node_modules/.bin/tsc --noEmit` → exit 0
+  - `npm test` → exit 0, 25 tests / 25 pass, Node v22.23.1, macOS arm64
+  - `npm run typecheck` → exit 0 (tsc --noEmit)
+  - `npm run pack:check` → exit 0, zero pack errors
 - External dependencies and decisions:
   - PostgreSQL cannot run in this sandbox (`shmget` blocked at initdb). Decision: SQLite via `node:sqlite` with WAL + transactions; see `docs/decisions/0001-sqlite.md`.
-  - Live kite_session dispatch has no owner authority → fail-closed `blocked_external` rail behavior (KITE-AND-PROVIDERS).
-  - Terminal-data provider: none licensed → `local_demo` adapter is a team-controlled fake merchant; real partner integration stays blocked and visible in `/ops`.
-- First next action: write `test/m03-evidence.test.ts` for T-005 (bounded May 4–5 gap → INR 0–1,000 dispute range) and T-006 (cross-voyage record quarantine).
-- Next agent must reproduce: `node --test 'test/*.test.ts'`
+  - Live kite_session dispatch has no owner authority → fail-closed `blocked_external` rail behavior (KITE-AND-PROVIDERS). Missing proof: a licensed session + seller registration was never demonstrated in this run.
+  - Terminal-data provider: none licensed → `local_demo` adapter is a team-controlled fake merchant; real partner integration stays `blocked_external` and visible in `/ops`.
+  - Nested SQLite transactions now use savepoints (`src/db.ts` `tx`), required by callback → ingestEvent composition.
+- First next action: browser/UI smoke review of `/` (casebook), `/ops` and portfolio page; then a clean-checkout run (`npm ci && npm test`) and a final commit updating `testedSha` in STATUS.json.
+- Next agent must reproduce: `npm test && npm run typecheck && npm run pack:check`

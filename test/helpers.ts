@@ -24,10 +24,18 @@ export interface TestApp {
   close: () => void;
 }
 
-export async function makeApp(opts: { withWorker?: boolean } = {}): Promise<TestApp> {
-  const tmpRoot = path.join(process.cwd(), 'var', 'test-tmp');
-  mkdirSync(tmpRoot, { recursive: true });
-  const dir = mkdtempSync(path.join(tmpRoot, 'ped-test-'));
+export async function makeApp(opts: { withWorker?: boolean; dataDir?: string } = {}): Promise<TestApp> {
+  let dir: string;
+  let ownDir = true;
+  if (opts.dataDir) {
+    dir = opts.dataDir;
+    mkdirSync(dir, { recursive: true });
+    ownDir = false;
+  } else {
+    const tmpRoot = path.join(process.cwd(), 'var', 'test-tmp');
+    mkdirSync(tmpRoot, { recursive: true });
+    dir = mkdtempSync(path.join(tmpRoot, 'ped-test-'));
+  }
   const cfg: AppConfig = {
     ...loadConfig(),
     dbPath: path.join(dir, 'test.db'),
@@ -79,7 +87,7 @@ export async function makeApp(opts: { withWorker?: boolean } = {}): Promise<Test
       worker?.stop();
       server.close();
       db.close();
-      rmSync(dir, { recursive: true, force: true });
+      if (ownDir) rmSync(dir, { recursive: true, force: true });
     },
   };
   return app;
@@ -115,7 +123,7 @@ export async function pinDemoTariff(app: TestApp, analystToken: string, caseId: 
 
 export async function postEvent(
   app: TestApp, analystToken: string, caseId: string,
-  ev: { type: string; local_date: string; utc_offset?: string; record_id?: string; revision?: number; container_ref?: string; voyage_ref?: string; terminal_id?: string },
+  ev: { type: string; local_date: string; utc_offset?: string; record_id?: string; revision?: number; supplier?: string; container_ref?: string; voyage_ref?: string; terminal_id?: string },
 ) {
   return app.request('POST', `/cases/${caseId}/events`, { token: analystToken, body: ev });
 }

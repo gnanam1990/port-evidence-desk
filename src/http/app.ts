@@ -15,7 +15,9 @@ import { registerFixtureApi } from '../api/fixtures.ts';
 import { registerPackageApi } from '../api/packages.ts';
 import { registerCreditApi } from '../api/credits.ts';
 import { registerOpsApi } from '../api/ops.ts';
-import { registerUi } from '../ui/routes.ts';
+import { registerUi, caseDetailHtml, portfolioHtml } from '../ui/routes.ts';
+import { caseDetail } from '../domain/caseview.ts';
+import { portfolioReport } from '../domain/credits.ts';
 
 interface Ctx extends RequestCtx {
   db: Db;
@@ -37,6 +39,19 @@ export function buildHandler(db: Db, cfg: AppConfig) {
 
   // Unauthenticated utility routes
   router.add('GET', '/health', () => ({ ok: true, service: 'port-evidence-desk' }));
+
+  // Content-negotiated shared surfaces: HTML for browsers, JSON for API
+  // clients at the same canonical URL.
+  const wantsHtml = (ctx: RequestCtx) =>
+    String(ctx.headers.accept ?? '').includes('text/html');
+  router.add('GET', '/cases/:id', (ctx) =>
+    wantsHtml(ctx)
+      ? caseDetailHtml(db, cfg, ctx)
+      : caseDetail(db, ctx.params.id, actorFromRequest(db, ctx.headers)));
+  router.add('GET', '/portfolio', (ctx) =>
+    wantsHtml(ctx)
+      ? portfolioHtml(db, ctx)
+      : portfolioReport(db, actorFromRequest(db, ctx.headers).tenantId));
   router.add('POST', '/sessions', (ctx) => {
     const body = JSON.parse(ctx.rawBody || '{}');
     return createSession(db, String(body.name ?? ''), String(body.pin ?? ''));
@@ -84,10 +99,6 @@ export function buildHandler(db: Db, cfg: AppConfig) {
        FROM cases WHERE tenant_id = ? ORDER BY created_at DESC`,
       actor!.tenantId,
     );
-  });
-
-  api('GET', '/cases/:id', (ctx, actor) => {
-    return caseDetail(db, ctx.params.id, actor!);
   });
 
   api('POST', '/conflicts/:id/resolve-invoice', (ctx, actor) => {
@@ -155,50 +166,6 @@ export function buildHandler(db: Db, cfg: AppConfig) {
     } finally {
       void started;
     }
-  };
-}
-
-export function caseDetail(db: Db, caseId: string, actor: Actor) {
-  const c = one<Record<string, unknown>>(
-    db,
-    'SELECT * FROM cases WHERE id = ? AND tenant_id = ?',
-    caseId,
-    actor.tenantId,
-  );
-  if (!c) throw notFound('case_not_found', 'case not found');
-  const chargeLines = all(db, 'SELECT * FROM charge_lines WHERE case_id = ?', caseId);
-  const docs = all(
-    db,
-    'SELECT id, revision, source_digest, filename, format, received_by, received_at, status, provenance FROM invoice_documents WHERE case_id = ? ORDER BY revision',
-    caseId,
-  );
-  const events = all(
-    db,
-    `SELECT id, type, local_date, local_time, utc_offset, utc_instant, supplier, record_id, revision, source_digest, provenance, status, created_at
-     FROM events WHERE case_id = ? ORDER BY local_date, utc_instant`,
-    caseId,
-  );
-  const gaps = all(db, 'SELECT * FROM gaps WHERE case_id = ?', caseId);
-  const calculation = one(
-    db,
-    'SELECT * FROM calculations WHERE case_id = ? ORDER BY revision DESC LIMIT 1',
-    caseId,
-  );
-  const conflicts = all(db, "SELECT * FROM conflicts WHERE case_id = ? AND status = 'open'", caseId);
-  const credits = all(db, 'SELECT * FROM credits WHERE case_id = ?', caseId);
-  const orders = all(db, 'SELECT * FROM evidence_orders WHERE case_id = ?', caseId);
-  const packages = all(db, 'SELECT * FROM packages WHERE case_id = ?', caseId);
-  return {
-    ...c,
-    charge_lines: chargeLines,
-    invoice_documents: docs,
-    events,
-    gaps,
-    latest_calculation: calculation ?? null,
-    open_conflicts: conflicts,
-    credits,
-    evidence_orders: orders,
-    packages,
   };
 }
 

@@ -18,7 +18,7 @@ import { esc, layout, money, statusChip, table } from './html.ts';
 import { CSS } from './style.css.ts';
 import { tx } from '../db.ts';
 import { isoNow } from '../util/dates.ts';
-import { caseDetail } from '../http/app.ts';
+import { caseDetail } from '../domain/caseview.ts';
 import { readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -58,6 +58,34 @@ async function uiAction(
     const ref = formBody(ctx).get('_back') ?? '/';
     return redirect(`${ref}${ref.includes('?') ? '&' : '?'}error=${encodeURIComponent(msg)}`);
   }
+}
+
+/** HTML casebook surface; reached via content negotiation on GET /cases/:id. */
+export function caseDetailHtml(db: Db, cfg: AppConfig, ctx: RequestCtx): HtmlOut | Redirect {
+  const actor = actorOrLogin(db, ctx);
+  if (!actor) return redirect('/login');
+  const id = ctx.params.id;
+  const c = one<Record<string, unknown>>(db, 'SELECT * FROM cases WHERE id = ? AND tenant_id = ?', id, actor.tenantId);
+  if (!c) return html(layout(actor, 'Not found', '<p>Case not found.</p>', notice(ctx)), 404);
+  return html(layout(actor, `Case ${c.invoice_ref}`, casePage(db, cfg, actor, id), notice(ctx)));
+}
+
+/** HTML portfolio rollup; reached via content negotiation on GET /portfolio. */
+export function portfolioHtml(db: Db, ctx: RequestCtx): HtmlOut | Redirect {
+  const actor = actorOrLogin(db, ctx);
+  if (!actor) return redirect('/login');
+  const rep = portfolioReport(db, actor.tenantId);
+  return html(layout(actor, 'Portfolio', `
+      <h2>Portfolio rollup</h2>
+      ${table('Per-currency subtotals', [
+        { key: 'currency', label: 'Currency' },
+        { key: 'disputed_minor', label: 'Disputed (potential, active cases)', render: (r) => money(r.disputed_minor as number, String(r.currency)) },
+        { key: 'submitted_minor', label: 'Submitted (exported claims)', render: (r) => money(r.submitted_minor as number, String(r.currency)) },
+        { key: 'credited_minor', label: 'Credited (recovered cash)', render: (r) => money(r.credited_minor as number, String(r.currency)) },
+        { key: 'case_count', label: 'Cases' },
+      ], rep.totals as unknown as Record<string, unknown>[])}
+      <p class="empty">Disputed, submitted and credited are separate provenance classes; an export never moves cash.</p>`,
+      notice(ctx)));
 }
 
 export function registerUi(router: Router, db: Db, cfg: AppConfig): void {
@@ -138,32 +166,6 @@ export function registerUi(router: Router, db: Db, cfg: AppConfig): void {
         { key: 'source_class', label: 'Source' },
       ], cases)}
       ${importForm}`, notice(ctx)));
-  });
-
-  router.add('GET', '/cases/:id', (ctx) => {
-    const actor = actorOrLogin(db, ctx);
-    if (!actor) return redirect('/login');
-    const id = ctx.params.id;
-    const c = one<Record<string, unknown>>(db, 'SELECT * FROM cases WHERE id = ? AND tenant_id = ?', id, actor.tenantId);
-    if (!c) return html(layout(actor, 'Not found', '<p>Case not found.</p>', notice(ctx)), 404);
-    return html(layout(actor, `Case ${c.invoice_ref}`, casePage(db, cfg, actor, id), notice(ctx)));
-  });
-
-  router.add('GET', '/portfolio', (ctx) => {
-    const actor = actorOrLogin(db, ctx);
-    if (!actor) return redirect('/login');
-    const rep = portfolioReport(db, actor.tenantId);
-    return html(layout(actor, 'Portfolio', `
-      <h2>Portfolio rollup</h2>
-      ${table('Per-currency subtotals', [
-        { key: 'currency', label: 'Currency' },
-        { key: 'disputed_minor', label: 'Disputed (potential, active cases)', render: (r) => money(r.disputed_minor as number, String(r.currency)) },
-        { key: 'submitted_minor', label: 'Submitted (exported claims)', render: (r) => money(r.submitted_minor as number, String(r.currency)) },
-        { key: 'credited_minor', label: 'Credited (recovered cash)', render: (r) => money(r.credited_minor as number, String(r.currency)) },
-        { key: 'case_count', label: 'Cases' },
-      ], rep.totals as unknown as Record<string, unknown>[])}
-      <p class="empty">Disputed, submitted and credited are separate provenance classes; an export never moves cash.</p>`,
-      notice(ctx)));
   });
 
   router.add('GET', '/ops', (ctx) => {
