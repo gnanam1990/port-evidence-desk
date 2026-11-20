@@ -1,0 +1,15 @@
+{
+  "invoice_ref": "PILOT-INV-001",
+  "container_ref": "TCLU9988776",
+  "voyage_ref": "PILOT-VOY-01",
+  "terminal_id": "INMAA1",
+  "currency": "INR",
+  "charge_lines": [
+    {
+      "service": "import_demurrage",
+      "billed_minor": 150000,
+      "period_start": "2026-05-03",
+      "period_end": "2026-05-04"
+    }
+  ]
+}

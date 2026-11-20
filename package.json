@@ -1,0 +1,23 @@
+{
+  "name": "port-evidence-desk",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Port Evidence Desk — reconstruct terminal demurrage invoices against versioned tariffs and authorized gate evidence.",
+  "type": "module",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "dev": "node src/server.ts",
+    "worker": "node src/worker.ts",
+    "seed": "node --env-file=.env src/seed.ts",
+    "test": "node --test 'test/*.test.ts'",
+    "test:report": "node --test --test-reporter=tap 'test/*.test.ts'",
+    "typecheck": "tsc --noEmit",
+    "pack:check": "node docs/build-pack/tools/check-build-pack.mjs --root docs/build-pack"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.0",
+    "typescript": "~5.9.3"
+  }
+}

@@ -1,0 +1,2 @@
+invoice_ref,container_ref,voyage_ref,terminal_id,currency,service,billed_minor,period_start,period_end
+INV-7742,MSCU7654321,VOY-91,INMAA1,INR,import_demurrage,300000,2026-05-03,2026-05-05
