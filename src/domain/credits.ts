@@ -80,13 +80,15 @@ export function portfolioReport(db: Db, tenantId: string) {
     const calc = one<{ variance_max_minor: number | null; status: string }>(
       db, 'SELECT variance_max_minor, status FROM calculations WHERE case_id = ? ORDER BY revision DESC LIMIT 1', c.id,
     );
-    const active = !['exported', 'credited'].includes(c.state);
-    if (active && calc && ['priced', 'bounded_estimate', 'conflict'].includes(calc.status)) {
-      bucket.disputed += calc.variance_max_minor ?? 0;
-    }
     const exported = one<{ inputs_digest: string; calculation_id: string }>(
       db, "SELECT inputs_digest, calculation_id FROM packages WHERE case_id = ? AND status = 'exported' ORDER BY exported_at DESC LIMIT 1", c.id,
     );
+    // Disputed = potential recovery not yet claimed; once a claim is exported
+    // the value moves to 'submitted' instead of being counted twice.
+    const active = !['exported', 'credited'].includes(c.state) && !exported;
+    if (active && calc && ['priced', 'bounded_estimate', 'conflict'].includes(calc.status)) {
+      bucket.disputed += calc.variance_max_minor ?? 0;
+    }
     if (exported) {
       const ecalc = one<{ variance_max_minor: number | null }>(
         db, 'SELECT variance_max_minor FROM calculations WHERE id = ?', exported.calculation_id,
