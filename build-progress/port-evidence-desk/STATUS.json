@@ -1,0 +1,134 @@
+{
+  "project": "Port Evidence Desk",
+  "packVersion": "1.0",
+  "testedSha": "9616d020c9a1cc0a7febade89f13829c8b9a755e",
+  "targetBranch": "devin/port-evidence-desk",
+  "modules": [
+    {
+      "id": "M01",
+      "title": "Invoice and voyage intake",
+      "state": "accepted",
+      "owner": "devin",
+      "commands": [
+        "npm test"
+      ],
+      "evidence": [
+        "test/m01-intake.test.ts (5 tests pass)"
+      ],
+      "nextAction": "none \u2014 dedup, conflict revisions, CSV/JSON bounds, tenant isolation proven"
+    },
+    {
+      "id": "M02",
+      "title": "Tariff clock and day ledger",
+      "state": "accepted",
+      "owner": "devin",
+      "commands": [
+        "npm test"
+      ],
+      "evidence": [
+        "test/m02-tariff.test.ts (3 tests pass)"
+      ],
+      "nextAction": "none \u2014 pinned immutable versions, per-day ledger, unpriced-not-zero proven"
+    },
+    {
+      "id": "M03",
+      "title": "Evidence graph and uncertainty",
+      "state": "accepted",
+      "owner": "devin",
+      "commands": [
+        "npm test"
+      ],
+      "evidence": [
+        "test/m03-evidence.test.ts (3 tests pass)"
+      ],
+      "nextAction": "none \u2014 T-005 bounded range, T-006 quarantine, dual-record conflict proven"
+    },
+    {
+      "id": "M04",
+      "title": "Quote and scoped acquisition",
+      "state": "accepted",
+      "owner": "devin",
+      "commands": [
+        "npm test"
+      ],
+      "evidence": [
+        "test/m04-quotes.test.ts (4 tests pass)"
+      ],
+      "nextAction": "none \u2014 T-007 under-ceiling authorize, T-008 over-ceiling/expired-conversion/no-conversion block, rights gate proven"
+    },
+    {
+      "id": "M05",
+      "title": "Partner reconciliation",
+      "state": "accepted",
+      "owner": "devin",
+      "commands": [
+        "npm test"
+      ],
+      "evidence": [
+        "test/m05-reconcile.test.ts (3 tests pass)"
+      ],
+      "nextAction": "none \u2014 T-009 callback convergence, T-010 conflicting times \u2192 review, parked/bad-sig/stale/supersede proven"
+    },
+    {
+      "id": "M06",
+      "title": "Analyst casebook and export",
+      "state": "accepted",
+      "owner": "devin",
+      "commands": [
+        "npm test"
+      ],
+      "evidence": [
+        "test/m06-export.test.ts (2 tests pass)"
+      ],
+      "nextAction": "none \u2014 T-011 reproducible manifest, T-012 approval invalidation on correction proven; UI smoke still to review"
+    },
+    {
+      "id": "M07",
+      "title": "Credit posting and portfolio reporting",
+      "state": "accepted",
+      "owner": "devin",
+      "commands": [
+        "npm test"
+      ],
+      "evidence": [
+        "test/m07-credits.test.ts (3 tests pass)"
+      ],
+      "nextAction": "none \u2014 T-013 credit dedup, T-014 currency/tenant/role rejection, per-currency rollup proven"
+    },
+    {
+      "id": "M08",
+      "title": "End-to-end operator replay",
+      "state": "accepted",
+      "owner": "devin",
+      "commands": [
+        "npm test"
+      ],
+      "evidence": [
+        "test/m08-e2e.test.ts (2 tests pass)"
+      ],
+      "nextAction": "none \u2014 T-015 restart recovery, T-016 blocked kite route + labeled pilot fixture proven"
+    }
+  ],
+  "externalDependencies": [
+    {
+      "name": "PostgreSQL",
+      "status": "unavailable_in_sandbox",
+      "missing_proof": "initdb fails with 'shmget Operation not permitted'; SQLite via node:sqlite substituted (docs/decisions/0001-sqlite.md)"
+    },
+    {
+      "name": "Kite live payment session (kite_session rail)",
+      "status": "blocked_fail_closed",
+      "missing_proof": "no owner authority / licensed session in this run; every dispatch returns provider_capability_blocked \u2192 order blocked_external, paid=0"
+    },
+    {
+      "name": "Terminal-data provider (real gate records)",
+      "status": "unlicensed",
+      "missing_proof": "no licensed provider or permission to use gate records; local_demo adapter is a labeled team-controlled fake merchant"
+    },
+    {
+      "name": "Chromium browser for CDP UI proof",
+      "status": "blocked_in_agent_sandbox",
+      "missing_proof": "chrome-headless-shell dies at bootstrap_check_in (Mach rendezvous, permission denied); runnable check + skipped-check ledger committed under build-progress/port-evidence-desk/BROWSER.md \u2014 replay `node tools/browser-check.mjs` on the host"
+    }
+  ]
+}

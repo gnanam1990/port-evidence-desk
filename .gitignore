@@ -1,0 +1,9 @@
+node_modules/
+.npm-cache/
+var/
+exports/*/
+!exports/.gitkeep
+build-progress/port-evidence-desk/evidence/*.tap
+*.log
+.env
+.DS_Store

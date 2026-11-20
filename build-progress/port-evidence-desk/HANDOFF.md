@@ -1,0 +1,25 @@
+# Port Evidence Desk · Session handoff
+
+- Target repository / branch / tested SHA: port-evidence-desk / devin/port-evidence-desk / 9616d02
+- Current module and owner: all modules M01–M08 implemented and test-green; owner devin
+- Completed behavior and redacted evidence path:
+  - M01 intake (JSON+CSV, provenance, dedup, conflict revisions) — `test/m01-intake.test.ts`
+  - M02 tariff/day ledger (versioned pin, per-day kinds, unpriced-not-zero) — `test/m02-tariff.test.ts`
+  - M03 evidence/uncertainty (quarantine, bounded gaps, dispute≠credit) — `test/m03-evidence.test.ts`
+  - M04 quotes/authorization (budget ceiling, conversion pinning, rights, idempotent order) — `test/m04-quotes.test.ts`
+  - M05 partner reconciliation (HMAC callbacks, dedup, conflicts, parked unknown, supersede) — `test/m05-reconcile.test.ts`
+  - M06 export (manifest+ledger+claim, approval pinning, stale invalidation) — `test/m06-export.test.ts`
+  - M07 credits/portfolio (carrier-ref dedup, currency/tenant gates, per-currency rollup) — `test/m07-credits.test.ts`
+  - M08 e2e (restart recovery via savepoints+stuck-row reset, blocked kite rail, labeled pilot fixture) — `test/m08-e2e.test.ts`
+- Working tree or branch requiring transfer: none beyond HEAD
+- Commands, exit codes and tested environment:
+  - `npm test` → exit 0, 25 tests / 25 pass, Node v22.23.1, macOS arm64
+  - `npm run typecheck` → exit 0 (tsc --noEmit)
+  - `npm run pack:check` → exit 0, zero pack errors
+- External dependencies and decisions:
+  - PostgreSQL cannot run in this sandbox (`shmget` blocked at initdb). Decision: SQLite via `node:sqlite` with WAL + transactions; see `docs/decisions/0001-sqlite.md`.
+  - Live kite_session dispatch has no owner authority → fail-closed `blocked_external` rail behavior (KITE-AND-PROVIDERS). Missing proof: a licensed session + seller registration was never demonstrated in this run.
+  - Terminal-data provider: none licensed → `local_demo` adapter is a team-controlled fake merchant; real partner integration stays `blocked_external` and visible in `/ops`.
+  - Nested SQLite transactions now use savepoints (`src/db.ts` `tx`), required by callback → ingestEvent composition.
+- First next action: none — all modules accepted; release proof run from clean checkout `var/release-check` at 7d2c0a0 (npm ci, 25/25 tests, server+worker, full operator flow incl. export manifest and credit rollup).
+- Next agent must reproduce: `npm test && npm run typecheck && npm run pack:check`

@@ -1,0 +1,15 @@
+{
+  "invoice_ref": "INV-7741",
+  "container_ref": "MSCU1234567",
+  "voyage_ref": "VOY-88",
+  "terminal_id": "INMAA1",
+  "currency": "INR",
+  "charge_lines": [
+    {
+      "service": "import_demurrage",
+      "billed_minor": 300000,
+      "period_start": "2026-05-03",
+      "period_end": "2026-05-05"
+    }
+  ]
+}
