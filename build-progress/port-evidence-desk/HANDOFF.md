@@ -1,6 +1,6 @@
 # Port Evidence Desk · Session handoff
 
-- Target repository / branch / tested SHA: port-evidence-desk / devin/port-evidence-desk / 98d3ff5
+- Target repository / branch / tested SHA: port-evidence-desk / devin/port-evidence-desk / 9616d02
 - Current module and owner: all modules M01–M08 implemented and test-green; owner devin
 - Completed behavior and redacted evidence path:
   - M01 intake (JSON+CSV, provenance, dedup, conflict revisions) — `test/m01-intake.test.ts`
