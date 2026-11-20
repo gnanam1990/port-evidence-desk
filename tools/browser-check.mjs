@@ -85,6 +85,7 @@ async function waitFor(fn, { tries = 80, delay = 150, what = 'condition' } = {})
 /* App server (ephemeral port, disposable db/exports)                  */
 /* ------------------------------------------------------------------ */
 
+mkdirSync(path.join(ROOT, 'var'), { recursive: true });
 const workDir = mkdtempSync(path.join(ROOT, 'var', 'browser-check-'));
 const appPort = await freePort();
 const cdpPort = await freePort();
@@ -352,7 +353,9 @@ try {
   };
   const TAB = () => pressKey('Tab', 'Tab', 9);
   const ENTER = () => pressKey('Enter', 'Enter', 13, '\r');
-  const activeEl = () => evalJs('document.activeElement && (document.activeElement.tagName + "|" + (document.activeElement.id||"") + "|" + (document.activeElement.getAttribute("href")||document.activeElement.textContent||"").trim().slice(0,40))');
+  const activeEl = () => evalJs('document.activeElement && (document.activeElement.tagName + "|" + (document.activeElement.id||"") + "|" + (document.activeElement.getAttribute("href")||document.activeElement.textContent||"").trim().slice(0,120))');
+  const focusedIsCaseLink = () =>
+    evalJs(`document.activeElement && document.activeElement.getAttribute('href') === '/cases/${caseId}'`);
   const url = () => evalJs('location.href');
   const bodyText = () => evalJs('document.body.innerText');
 
@@ -382,17 +385,19 @@ try {
     (await bodyText()).includes('INV-7741') && (await bodyText()).includes('MSCU1234567'));
 
   /* ---- 3 · keyboard into the casebook --------------------------- */
-  hops = 0; el = null;
-  while (hops++ < 30) {
-    el = await activeEl();
-    if (el && el.includes(`/cases/${caseId}`)) break;
-    await TAB();
+  // The queue link is matched by its full href (text/truncation-agnostic).
+  let onCaseLink = false;
+  for (let i = 0; i < 40 && !onCaseLink; i++) {
+    onCaseLink = await focusedIsCaseLink();
+    if (!onCaseLink) await TAB();
   }
-  check('Tab order reaches the case link', !!el, `focused=${el}`);
+  check('Tab order reaches the case link', onCaseLink, `focused=${await activeEl()}`);
   check('focused element shows a visible focus outline',
     await evalJs(`getComputedStyle(document.activeElement).outlineStyle !== 'none' || getComputedStyle(document.activeElement).outlineWidth !== '0px'`));
-  await ENTER();
-  await waitFor(async () => (await evalJs('location.pathname')) === `/cases/${caseId}`, { what: 'casebook navigation' });
+  if (onCaseLink) {
+    await ENTER();
+    await waitFor(async () => (await evalJs('location.pathname')) === `/cases/${caseId}`, { what: 'casebook navigation' });
+  }
   check('Enter opens the casebook', (await evalJs('location.pathname')) === `/cases/${caseId}`);
 
   /* ---- 4 · evidence + day ledger + disputed vs recovery --------- */

@@ -1,5 +1,5 @@
 {
-  "when": "2026-11-20T06:50:53.163Z",
+  "when": "2026-11-20T06:53:21.163Z",
   "browser": "none",
   "app": "node src/server.ts (ephemeral port)",
   "checks": [
