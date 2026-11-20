@@ -12,7 +12,8 @@ main { padding:16px; max-width:1100px; margin:0 auto; }
 section.card { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:14px 16px; margin:12px 0; }
 h2 { font-size:16px; margin:0 0 8px; }
 h3 { font-size:14px; margin:12px 0 6px; }
-table { border-collapse:collapse; width:100%; font-size:14px; margin:6px 0; }
+.table-wrap { overflow-x:auto; max-width:100%; }
+table { border-collapse:collapse; width:100%; min-width:460px; font-size:14px; margin:6px 0; }
 caption { text-align:left; font-weight:600; padding:4px 0; }
 th, td { border:1px solid var(--line); padding:5px 8px; text-align:left; vertical-align:top; }
 th { background:#eef2f6; }
