@@ -1,0 +1,80 @@
+{
+  "project": "Port Evidence Desk",
+  "packVersion": "1.0",
+  "testedSha": null,
+  "targetBranch": null,
+  "modules": [
+    {
+      "id": "M01",
+      "title": "Invoice and voyage intake",
+      "state": "pending",
+      "owner": null,
+      "commands": [],
+      "evidence": [],
+      "nextAction": "Parse bounded CSV and a canonical JSON form, normalize amounts as integer minor units, require voyage, terminal and invoice identity, and preserve file provenance."
+    },
+    {
+      "id": "M02",
+      "title": "Tariff clock and day ledger",
+      "state": "pending",
+      "owner": null,
+      "commands": [],
+      "evidence": [],
+      "nextAction": "Model effective tariff versions, terminal-local dates, rate tiers, exception calendars and explicit start/end inclusion. Make each day independently inspectable."
+    },
+    {
+      "id": "M03",
+      "title": "Evidence graph and uncertainty",
+      "state": "pending",
+      "owner": null,
+      "commands": [],
+      "evidence": [],
+      "nextAction": "Attach signed or authenticated source records to events; identify conflicts and bounded gaps and compute alternative valid charge outcomes."
+    },
+    {
+      "id": "M04",
+      "title": "Quote and scoped acquisition",
+      "state": "pending",
+      "owner": null,
+      "commands": [],
+      "evidence": [],
+      "nextAction": "Capture quote, price asset, expiry, permitted seller and redistribution rights. Require an applicable case budget, an auditable comparison and a Kite-compatible payment route before dispatch."
+    },
+    {
+      "id": "M05",
+      "title": "Partner reconciliation",
+      "state": "pending",
+      "owner": null,
+      "commands": [],
+      "evidence": [],
+      "nextAction": "Implement authenticated retrieval or callbacks with idempotency, provenance hashes, unknown-order handling and selective retry. Add manual conflict resolution and a reason trail."
+    },
+    {
+      "id": "M06",
+      "title": "Analyst casebook and export",
+      "state": "pending",
+      "owner": null,
+      "commands": [],
+      "evidence": [],
+      "nextAction": "Build a keyboard-accessible invoice/day comparison and evidence panel. Export review-approved calculations and licensed attachments with a case manifest."
+    },
+    {
+      "id": "M07",
+      "title": "Credit posting and portfolio reporting",
+      "state": "pending",
+      "owner": null,
+      "commands": [],
+      "evidence": [],
+      "nextAction": "Record referenced credits against invoice lines and expose disputed, submitted where manually evidenced, and credited amounts across active cases, with per-currency subtotals."
+    },
+    {
+      "id": "M08",
+      "title": "End-to-end operator replay",
+      "state": "pending",
+      "owner": null,
+      "commands": [],
+      "evidence": [],
+      "nextAction": "Exercise import, governed data acquisition, late correction, exported artifacts and accounting through normal user surfaces; provide a licensed pilot-fixture intake path."
+    }
+  ]
+}
