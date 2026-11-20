@@ -1,7 +1,7 @@
 {
   "project": "Port Evidence Desk",
   "packVersion": "1.0",
-  "testedSha": "24e73b3000000000000000000000000000000000",
+  "testedSha": "7d2c0a0f1fc914513f5ce0d10e6501ffdadfb7e9",
   "targetBranch": "devin/port-evidence-desk",
   "modules": [
     {
@@ -9,72 +9,104 @@
       "title": "Invoice and voyage intake",
       "state": "accepted",
       "owner": "devin",
-      "commands": ["npm test"],
-      "evidence": ["test/m01-intake.test.ts (5 tests pass)"],
-      "nextAction": "none — dedup, conflict revisions, CSV/JSON bounds, tenant isolation proven"
+      "commands": [
+        "npm test"
+      ],
+      "evidence": [
+        "test/m01-intake.test.ts (5 tests pass)"
+      ],
+      "nextAction": "none \u2014 dedup, conflict revisions, CSV/JSON bounds, tenant isolation proven"
     },
     {
       "id": "M02",
       "title": "Tariff clock and day ledger",
       "state": "accepted",
       "owner": "devin",
-      "commands": ["npm test"],
-      "evidence": ["test/m02-tariff.test.ts (3 tests pass)"],
-      "nextAction": "none — pinned immutable versions, per-day ledger, unpriced-not-zero proven"
+      "commands": [
+        "npm test"
+      ],
+      "evidence": [
+        "test/m02-tariff.test.ts (3 tests pass)"
+      ],
+      "nextAction": "none \u2014 pinned immutable versions, per-day ledger, unpriced-not-zero proven"
     },
     {
       "id": "M03",
       "title": "Evidence graph and uncertainty",
       "state": "accepted",
       "owner": "devin",
-      "commands": ["npm test"],
-      "evidence": ["test/m03-evidence.test.ts (3 tests pass)"],
-      "nextAction": "none — T-005 bounded range, T-006 quarantine, dual-record conflict proven"
+      "commands": [
+        "npm test"
+      ],
+      "evidence": [
+        "test/m03-evidence.test.ts (3 tests pass)"
+      ],
+      "nextAction": "none \u2014 T-005 bounded range, T-006 quarantine, dual-record conflict proven"
     },
     {
       "id": "M04",
       "title": "Quote and scoped acquisition",
       "state": "accepted",
       "owner": "devin",
-      "commands": ["npm test"],
-      "evidence": ["test/m04-quotes.test.ts (4 tests pass)"],
-      "nextAction": "none — T-007 under-ceiling authorize, T-008 over-ceiling/expired-conversion/no-conversion block, rights gate proven"
+      "commands": [
+        "npm test"
+      ],
+      "evidence": [
+        "test/m04-quotes.test.ts (4 tests pass)"
+      ],
+      "nextAction": "none \u2014 T-007 under-ceiling authorize, T-008 over-ceiling/expired-conversion/no-conversion block, rights gate proven"
     },
     {
       "id": "M05",
       "title": "Partner reconciliation",
       "state": "accepted",
       "owner": "devin",
-      "commands": ["npm test"],
-      "evidence": ["test/m05-reconcile.test.ts (3 tests pass)"],
-      "nextAction": "none — T-009 callback convergence, T-010 conflicting times → review, parked/bad-sig/stale/supersede proven"
+      "commands": [
+        "npm test"
+      ],
+      "evidence": [
+        "test/m05-reconcile.test.ts (3 tests pass)"
+      ],
+      "nextAction": "none \u2014 T-009 callback convergence, T-010 conflicting times \u2192 review, parked/bad-sig/stale/supersede proven"
     },
     {
       "id": "M06",
       "title": "Analyst casebook and export",
       "state": "accepted",
       "owner": "devin",
-      "commands": ["npm test"],
-      "evidence": ["test/m06-export.test.ts (2 tests pass)"],
-      "nextAction": "none — T-011 reproducible manifest, T-012 approval invalidation on correction proven; UI smoke still to review"
+      "commands": [
+        "npm test"
+      ],
+      "evidence": [
+        "test/m06-export.test.ts (2 tests pass)"
+      ],
+      "nextAction": "none \u2014 T-011 reproducible manifest, T-012 approval invalidation on correction proven; UI smoke still to review"
     },
     {
       "id": "M07",
       "title": "Credit posting and portfolio reporting",
       "state": "accepted",
       "owner": "devin",
-      "commands": ["npm test"],
-      "evidence": ["test/m07-credits.test.ts (3 tests pass)"],
-      "nextAction": "none — T-013 credit dedup, T-014 currency/tenant/role rejection, per-currency rollup proven"
+      "commands": [
+        "npm test"
+      ],
+      "evidence": [
+        "test/m07-credits.test.ts (3 tests pass)"
+      ],
+      "nextAction": "none \u2014 T-013 credit dedup, T-014 currency/tenant/role rejection, per-currency rollup proven"
     },
     {
       "id": "M08",
       "title": "End-to-end operator replay",
       "state": "accepted",
       "owner": "devin",
-      "commands": ["npm test"],
-      "evidence": ["test/m08-e2e.test.ts (2 tests pass)"],
-      "nextAction": "none — T-015 restart recovery, T-016 blocked kite route + labeled pilot fixture proven"
+      "commands": [
+        "npm test"
+      ],
+      "evidence": [
+        "test/m08-e2e.test.ts (2 tests pass)"
+      ],
+      "nextAction": "none \u2014 T-015 restart recovery, T-016 blocked kite route + labeled pilot fixture proven"
     }
   ],
   "externalDependencies": [
@@ -86,7 +118,7 @@
     {
       "name": "Kite live payment session (kite_session rail)",
       "status": "blocked_fail_closed",
-      "missing_proof": "no owner authority / licensed session in this run; every dispatch returns provider_capability_blocked → order blocked_external, paid=0"
+      "missing_proof": "no owner authority / licensed session in this run; every dispatch returns provider_capability_blocked \u2192 order blocked_external, paid=0"
     },
     {
       "name": "Terminal-data provider (real gate records)",

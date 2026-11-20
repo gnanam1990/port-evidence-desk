@@ -1,6 +1,6 @@
 # Port Evidence Desk · Session handoff
 
-- Target repository / branch / tested SHA: port-evidence-desk / devin/port-evidence-desk / (set after M06–M08 commit)
+- Target repository / branch / tested SHA: port-evidence-desk / devin/port-evidence-desk / 7d2c0a0
 - Current module and owner: all modules M01–M08 implemented and test-green; owner devin
 - Completed behavior and redacted evidence path:
   - M01 intake (JSON+CSV, provenance, dedup, conflict revisions) — `test/m01-intake.test.ts`
@@ -21,5 +21,5 @@
   - Live kite_session dispatch has no owner authority → fail-closed `blocked_external` rail behavior (KITE-AND-PROVIDERS). Missing proof: a licensed session + seller registration was never demonstrated in this run.
   - Terminal-data provider: none licensed → `local_demo` adapter is a team-controlled fake merchant; real partner integration stays `blocked_external` and visible in `/ops`.
   - Nested SQLite transactions now use savepoints (`src/db.ts` `tx`), required by callback → ingestEvent composition.
-- First next action: browser/UI smoke review of `/` (casebook), `/ops` and portfolio page; then a clean-checkout run (`npm ci && npm test`) and a final commit updating `testedSha` in STATUS.json.
+- First next action: none — all modules accepted; release proof run from clean checkout `var/release-check` at 7d2c0a0 (npm ci, 25/25 tests, server+worker, full operator flow incl. export manifest and credit rollup).
 - Next agent must reproduce: `npm test && npm run typecheck && npm run pack:check`
