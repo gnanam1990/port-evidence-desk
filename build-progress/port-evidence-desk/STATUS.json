@@ -1,7 +1,7 @@
 {
   "project": "Port Evidence Desk",
   "packVersion": "1.0",
-  "testedSha": "7d2c0a0f1fc914513f5ce0d10e6501ffdadfb7e9",
+  "testedSha": "64539b4dbd269935d78776cb57d132cffd8280e8",
   "targetBranch": "devin/port-evidence-desk",
   "modules": [
     {
@@ -124,6 +124,11 @@
       "name": "Terminal-data provider (real gate records)",
       "status": "unlicensed",
       "missing_proof": "no licensed provider or permission to use gate records; local_demo adapter is a labeled team-controlled fake merchant"
+    },
+    {
+      "name": "Chromium browser for CDP UI proof",
+      "status": "blocked_in_agent_sandbox",
+      "missing_proof": "chrome-headless-shell dies at bootstrap_check_in (Mach rendezvous, permission denied); runnable check + skipped-check ledger committed under build-progress/port-evidence-desk/BROWSER.md \u2014 replay `node tools/browser-check.mjs` on the host"
     }
   ]
 }
